@@ -1,6 +1,4 @@
-(function(window){
-
-  var WORKER_PATH = 'recorderWorker.js';
+var WORKER_PATH = 'recorderWorker.js';
 
   var Recorder = function(source, cfg){
     var config = cfg || {};
@@ -77,16 +75,27 @@
     this.node.connect(this.context.destination);    //this should not be necessary
   };
 
-  Recorder.forceDownload = function(blob, filename){
-    var url = (window.URL || window.webkitURL).createObjectURL(blob);
-    var link = window.document.createElement('a');
-    link.href = url;
-    link.download = filename || 'output.wav';
-    var click = document.createEvent("Event");
-    click.initEvent("click", true, true);
-    link.dispatchEvent(click);
-  }
+Recorder.forceDownload = function(blob, filename){
+  console.log(blob);
+  var url = (window.URL || window.webkitURL).createObjectURL(blob);
+  var link = window.document.createElement('a');
+  link.href = url;
+  console.log(url);
+  link.download = filename || 'output.wav';
+  console.log(link.download);
+  download(link.href, filename);
+  var click = document.createEvent("Event");
+  click.initEvent("click", true, true);
+  link.dispatchEvent(click);
+}
+/* downloads the blob!! */
+function download( url, filename ) {
+  var link = document.createElement('a');
+  link.setAttribute('href',url);
+  link.setAttribute('download',filename);
+  var event = document.createEvent('MouseEvents');
+  event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+  link.dispatchEvent(event);
+};
 
-  window.Recorder = Recorder;
-
-})(window);
+//module.exports = Recorder;
